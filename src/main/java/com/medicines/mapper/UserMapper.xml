@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medicines.mapper.UserMapper">
+	<!-- 회원 등록 -->
+	<insert id="insertUser" parameterType="User">
+		INSERT INTO MEDICINESUSER VALUES(#{id}, #{password}, #{name}, #{email}, #{phone}, 'user.jpg', #{authKey}, 0, sysdate, 1)
+	</insert>
+	
+	<resultMap type="User" id="userResultMap">
+		<id column="id" property="id"/>
+		<result column="password" property="password"/>
+		<result column="name" property="name"/>
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+		<result column="profile" property="profile"/>
+		<result column="auth_key" property="authKey"/>
+		<result column="auth_status" property="authStatus"/>
+		<result column="join_date" property="joinDate"/>
+		<result column="user_status" property="userStatus"/>
+	</resultMap>
+		
+	<!-- 회원아이디로 회원 찾기 -->	
+	<select id="selectUserById" resultMap="userResultMap">
+		SELECT * FROM MEDICINESUSER WHERE id=#{id}
+	</select>
+	
+	<!-- 회원이메일로 회원 찾기 -->	
+	<select id="selectUserByEmail" resultMap="userResultMap">
+		SELECT * FROM MEDICINESUSER WHERE email=#{email}
+	</select>
+	
+	<!-- 회원전화번호로 회원 찾기 -->	
+	<select id="selectUserByPhone" resultMap="userResultMap">
+		SELECT * FROM MEDICINESUSER WHERE phone=#{phone}
+	</select>
+	
+	<!-- 모든 회원 찾기 -->
+	<select id="selectUserList" resultMap="userResultMap">
+		SELECT * FROM MEDICINESUSER
+	</select>
+	
+	<!-- 회원 아이디 찾기 -->
+	<select id="findId" resultMap="userResultMap">
+		select * from medicinesuser where name=#{name} and email=#{email}
+	</select>
+	
+	<!-- 회원 비밀번호 찾기 -->
+	<select id="findPassword" resultMap="userResultMap">
+		select * from medicinesuser where id=#{id} and email=#{email}
+	</select>
+	
+	<!-- 인증키 업데이트 -->
+	<update id="updateAuthKey">
+		update medicinesuser set auth_key = #{authKey} where id = #{id}
+	</update> 
+	
+	<!-- 인증상태 업데이트 -->
+	<update id="updateAuthStatus">
+		update medicinesuser set auth_status = 1 where id = #{id}
+	</update> 
+	
+	<!-- 임시 비밀번호 업데이트 -->
+	<update id="updatePassword">
+		update medicinesuser set password=#{password} where id = #{id}
+	</update> 
+	
+	<!-- 회원 정보 업데이트 -->
+	<update id="updateUserInfo">
+		update medicinesuser
+		<set>
+			<if test="password!=null and password!=''">
+				password=#{password},
+			</if>
+			<if test="name!=null and name!=''">
+				name=#{name},
+			</if>
+			<if test="profile!=null and profile!=''">
+				profile=#{profile}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<!-- 회원 프로필 업데이트 -->
+	<update id="updateUserProfile">
+		update medicinesuser set profile=#{profile} where id=#{id}
+	</update>
+	
+	<!-- 회원 탈퇴 처리 -->
+	<update id="deleteUserAccount">
+		update medicinesuser set user_status = 5 where id = #{id} and password = #{password}
+	</update>
+	
+	<select id="selectAllUserList" parameterType="List" resultType="User">
+		select rownum,temp.* from (select * from medicinesuser where name like '%'||#{findfriend}||'%' or id like '%'||#{findfriend}||'%' order by id) temp 
+	</select>
+</mapper>

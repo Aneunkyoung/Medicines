@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medicines.mapper.DrugSearchMapper">
+	<update id="insertDrugSearchList" parameterType="Map">
+		<foreach collection="list" item="item" index="index" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+			into medicinesdruginfosearch(
+				entpName,
+				itemName,
+				img,
+				url 
+			)values(
+				#{item.entpName},
+				#{item.itemName},
+				#{item.img},
+				#{item.url}				
+			)
+		</foreach>
+	</update>
+	
+	<delete id="deleteAllDrugSearch">
+		delete from medicinesdruginfosearch 
+	</delete>
+	
+	<select id="selectAllDrugSearchList" parameterType="List" resultType="DrugSearch">
+		select rownum,temp.* from (select * from medicinesdruginfosearch where entpName like '%'||#{keyword}||'%' or itemName like '%'||#{keyword}||'%' order by itemName) temp 
+	</select>
+</mapper>

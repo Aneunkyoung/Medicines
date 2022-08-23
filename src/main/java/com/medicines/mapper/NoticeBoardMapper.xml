@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medicines.mapper.NoticeBoardMapper">
+	<insert id="insertNoticeBoard">
+		<selectKey resultType="int" keyProperty="num" order="BEFORE">
+			select medicinesnoticeboard_seq.nextval from dual
+		</selectKey>
+		insert into medicinesnoticeboard values(#{num}, #{id}, #{writer}, #{title}, #{content}, #{origin}, #{upload}, 0, sysdate)
+	</insert>
+	
+	<update id="updateNoticeBoard">
+		update medicinesnoticeboard set id=#{id}, writer=#{writer}, title=#{title}, content=#{content}, origin=#{origin}, upload=#{upload} where num = #{num}
+	</update>
+	
+
+	<update id="updateReadCount">
+		update medicinesnoticeboard set readcount=readcount+1 where num=#{num}
+	</update>
+	
+	<update id="deleteFile">
+		update medicinesnoticeboard set origin=null, upload=null where num=#{num}
+	</update>
+	
+	<delete id="deleteNoticeBoard">
+		delete from medicinesnoticeboard where num=#{num}
+	</delete>
+	
+	<select id="selectNoticeBoardCount" resultType="int">
+		select count(*) from medicinesnoticeboard <include refid="search"/>
+	</select>
+	
+	<select id="selectNoticeBoard" resultType="NoticeBoard">
+		select * from medicinesnoticeboard where num=#{num}
+	</select>
+	
+	<select id="selectNoticeBoardList" parameterType="map" resultType="NoticeBoard">
+		select * from 
+			(select rownum rn, board.* from 
+				(select * from medicinesnoticeboard join medicinesuser on medicinesNoticeBoard.id=medicinesuser.id <include refid="search" /> order by num desc) 
+			board) 
+		where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<sql id="search"> 
+		<choose> 
+			<when test="search_option == 'all' "> 
+				where 
+					title like '%'||#{keyword}||'%' or 
+					content like '%' || #{keyword}||'%' or 
+					writer like '%'||#{keyword}||'%' 
+			</when> 
+			<otherwise> 
+				where ${search_option} like '%'||#{keyword}||'%' 
+			</otherwise> 
+		</choose> 
+	</sql>
+</mapper>

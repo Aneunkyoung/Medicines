@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medicines.mapper.QuestionMapper">
+	<insert id="insertQuestion"> 
+		<selectKey resultType="int" keyProperty="num" order="BEFORE"> 
+			select medicinesquestion_seq.nextval from dual 
+		</selectKey> 
+		insert into medicinesquestion values(#{num}, #{id}, #{writer}, #{title}, #{content}, #{img},0, sysdate, #{status}) 
+	</insert> 
+	
+	<update id="updateQuestion"> 
+		update medicinesquestion set title=#{title}, content=#{content}, img=#{img}, status=#{status} where num=#{num} 
+	</update> 
+	
+	<update id="updateReadCount">
+		update medicinesquestion set readcount=readcount+1 where num=#{num}
+	</update>
+	
+	<delete id="deleteQuestion"> 
+		delete from medicinesquestion where num=#{num} 
+	</delete> 
+	
+	<select id="selectQuestionCount" resultType="int"> 
+		select count(*) from medicinesquestion <include refid="search"/>
+	</select> 
+	
+	<select id="selectQuestion" resultType="question"> 
+		select * from medicinesquestion where num=#{num} 
+	</select> 
+	
+	<select id="selectQuestionUserList" parameterType="map" resultType="Question"> 
+		select * from (select rownum rn, question.* from (select * from medicinesquestion join medicinesuser on medicinesquestion.id=medicinesuser.id <include refid="search" /> order by num desc) question) where rn between #{startRow} and #{endRow} 	
+	</select>
+	
+	<select id="selectMyQuestionBoardCount" resultType="int"> 
+		select count(*) from medicinesquestion <include refid="searchBoard"/>
+	</select> 
+	
+	<select id="selectMyQuestionBoardList" resultType="Question"> 
+		select * from medicinesquestion where id=#{id} order by num desc
+	</select> 
+	
+	<select id="selectQuestionBoardUserMyList" parameterType="map" resultType="Question"> 
+		select * from (select rownum rn, question.* from (select * from medicinesquestion join medicinesuser on medicinesquestion.id=medicinesuser.id <include refid="searchBoard" /> order by num desc) question) where rn between #{startRow} and #{endRow}	
+	</select>
+	
+	<sql id="search">
+        <choose>
+            <when test="search_option == 'all' ">
+                where  
+                      title like '%'||#{keyword}||'%'
+                      or content like '%' || #{keyword}||'%'
+                      or writer like '%'||#{keyword}||'%'   
+            </when>
+            <otherwise>
+                where ${search_option} like '%'||#{keyword}||'%'
+            </otherwise>
+        </choose>
+    </sql>
+    
+    <sql id="searchBoard">
+        <choose>
+            <when test="search_option == 'all' ">
+                where  
+                      title like '%'||#{keyword}||'%' and medicinesquestion.id=#{id}
+                      or content like '%' || #{keyword}||'%' and medicinesquestion.id=#{id}
+                      or writer like '%'||#{keyword}||'%' and medicinesquestion.id=#{id}
+            </when>
+            <otherwise>
+                where ${search_option} like '%'||#{keyword}||'%' and medicinesquestion.id=#{id}
+            </otherwise>
+        </choose>
+    </sql>
+</mapper>

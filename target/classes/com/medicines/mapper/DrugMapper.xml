@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medicines.mapper.DrugMapper">
+	<update id="insertDrug" parameterType="Map">
+	<foreach collection="list" item="item" index="index" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+                 INTO medicinesdruginfo  ( 
+                       entpName                     
+                     , itemName
+                     , itemSeq
+                     , efcyQesitm
+                     , useMethodQesitm                 
+                     , atpnWarnQesitm                 
+                     , atpnQesitm                 
+                     , intrcQesitm                 
+                     , seQesitm                 
+                     , depositMethodQesitm                 
+                     , itemImage                 
+                ) VALUES(
+                       #{item.entpName}                    
+                     , #{item.itemName}                         
+                     , #{item.itemSeq}                             
+                     , #{item.efcyQesitm}     
+                     , #{item.useMethodQesitm}
+                     , #{item.atpnWarnQesitm}
+                     , #{item.atpnQesitm}
+                     , #{item.intrcQesitm}
+                     , #{item.seQesitm}
+                     , #{item.depositMethodQesitm}
+                     , #{item.itemImage}
+                )
+             </foreach>
+	</update>
+	
+	<delete id="deleteAllDrug">
+		delete from medicinesdruginfo
+	</delete>
+	
+	<delete id="deleteDrug"> 
+		delete from medicinesdruginfo where itemSeq=#{itemSeq} 
+	</delete> 
+	
+	<update id="updateDrug"> 
+		update medicinesdruginfo set entpName=#{entpName}, itemName=#{itemName}, efcyQesitm=#{efcyQesitm}, 
+		useMethodQesitm=#{useMethodQesitm}, atpnWarnQesitm=#{atpnWarnQesitm}, atpnQesitm=#{atpnQesitm}, 
+		intrcQesitm=#{intrcQesitm}, seQesitm=#{seQesitm}, depositMethodQesitm=#{depositMethodQesitm}, itemImage=#{itemImage} where itemSeq=#{itemSeq} 
+	</update> 
+	
+	<select id="selectDrugByItemSeq" resultType="Drug"> 
+		select * from medicinesdruginfo where itemSeq=#{itemSeq} 
+	</select> 
+	
+	<select id="selectDrugCount" resultType="int"> 
+		select count(*) from medicinesdruginfo <include refid="search"/>
+	</select> 
+	
+	<select id="selectAllDrugList" parameterType="map" resultType="Drug"> 
+		select * from (select rownum rn, board.* from (select * from medicinesdruginfo <include refid="search" /> order by itemseq) board) where rn between #{startRow} and #{endRow}	
+	</select>
+	
+	<sql id="search">
+        <choose>
+            <when test="search_option == 'all' ">
+                where  
+                     itemseq like '%'||#{keyword}||'%'   
+					or entpName like '%' || #{keyword}||'%'
+					or itemname like '%' || #{keyword}||'%'
+					or efcyqesitm like '%'||#{keyword}||'%'   
+					or usemethodqesitm like '%'||#{keyword}||'%'   
+					or atpnwarnqesitm like '%'||#{keyword}||'%'   
+					or atpnqesitm like '%'||#{keyword}||'%'   
+					or intrcqesitm like '%'||#{keyword}||'%'   
+					or seqesitm like '%'||#{keyword}||'%'   
+					or depositmethodqesitm like '%'||#{keyword}||'%'   
+            </when>
+            <otherwise>
+                where ${search_option} like '%'||#{keyword}||'%'
+            </otherwise>
+        </choose>
+    </sql>
+</mapper>

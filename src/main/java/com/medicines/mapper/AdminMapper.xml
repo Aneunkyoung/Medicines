@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medicines.mapper.AdminMapper">
+	<resultMap type="User" id="userResultMap">
+		<id column="id" property="id"/>
+		<result column="password" property="password"/>
+		<result column="name" property="name"/>
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+		<result column="profile" property="profile"/>
+		<result column="auth_key" property="authKey"/>
+		<result column="auth_status" property="authStatus"/>
+		<result column="join_date" property="joinDate"/>
+		<result column="user_status" property="userStatus"/>
+	</resultMap>
+	
+	<select id="selectAllUserList" parameterType="map" resultType="User"> 
+		select * from (select rownum rn, board.* from (select * from MEDICINESUSER <include refid="search" /> order by user_status desc,join_date desc) board) where rn between #{startRow} and #{endRow}	
+	</select>
+	
+	<select id="selectUserCount" resultType="int"> 
+		select count(*) from medicinesuser <include refid="search"/>
+	</select> 
+	
+	<update id="updateUserStatus">
+		update medicinesuser set user_status = #{status} where id = #{id}
+	</update> 
+	
+	<update id="updateAuthStatus">
+		update medicinesuser set auth_status = #{status} where id = #{id}
+	</update> 
+	
+	<sql id="search">
+		<choose>
+	    	<when test="search_option == 'all' ">
+	         	where  
+	            id like '%'||#{keyword}||'%'
+				or name like '%' || #{keyword}||'%'
+				or email like '%'||#{keyword}||'%'   
+				or phone like '%'||#{keyword}||'%'   
+			</when>
+	        <otherwise>
+				where ${search_option} like '%'||#{keyword}||'%'
+	        </otherwise>
+	    </choose>
+    </sql>
+    
+    <select id="selectAllDrugList" parameterType="map" resultType="Drug"> 
+		select * from (select rownum rn, board.* from (select * from medicinesdruginfo <include refid="searchDrug" /> order by itemseq) board) where rn between #{startRow} and #{endRow}	
+	</select>
+	
+	<select id="selectDrugCount" resultType="int"> 
+		select count(*) from medicinesdruginfo <include refid="searchDrug"/>
+	</select> 
+	
+	<delete id="deleteDrug"> 
+		delete from medicinesdruginfo where itemSeq=#{itemSeq} 
+	</delete> 
+	
+	<sql id="searchDrug">
+		<choose>
+	    	<when test="search_option == 'all' ">
+	         	where  
+	         	itemseq like '%'||#{keyword}||'%'   
+				or entpName like '%' || #{keyword}||'%'
+				or itemname like '%' || #{keyword}||'%'
+				or efcyqesitm like '%'||#{keyword}||'%'   
+				or usemethodqesitm like '%'||#{keyword}||'%'   
+				or atpnwarnqesitm like '%'||#{keyword}||'%'   
+				or atpnqesitm like '%'||#{keyword}||'%'   
+				or intrcqesitm like '%'||#{keyword}||'%'   
+				or seqesitm like '%'||#{keyword}||'%'   
+				or depositmethodqesitm like '%'||#{keyword}||'%'   
+			</when>
+	        <otherwise>
+				where ${search_option} like '%'||#{keyword}||'%'
+	        </otherwise>
+	    </choose>
+    </sql>
+    
+    <select id="selectAllNoticeBoardList" parameterType="map" resultType="NoticeBoard"> 
+		select * from (select rownum rn, board.* from (select * from medicinesnoticeboard <include refid="searchNotice" /> order by regdate desc) board) where rn between #{startRow} and #{endRow}	
+	</select>
+	
+	<select id="selectNoticeCount" resultType="int"> 
+		select count(*) from medicinesnoticeboard <include refid="searchNotice"/>
+	</select> 
+	
+	<delete id="deleteNotice"> 
+		delete from medicinesnoticeboard where num=#{num} 
+	</delete> 
+	
+	<sql id="searchNotice">
+		<choose>
+	    	<when test="search_option == 'all' ">
+	         	where  
+	         	id like '%'||#{keyword}||'%'   
+				or writer like '%' || #{keyword}||'%'
+				or title like '%' || #{keyword}||'%'
+				or content like '%'||#{keyword}||'%'   
+				or regdate like '%'||#{keyword}||'%'   
+			</when>
+	        <otherwise>
+				where ${search_option} like '%'||#{keyword}||'%'
+	        </otherwise>
+	    </choose>
+    </sql>
+    
+    <select id="selectAllBoardList" parameterType="map" resultType="Board"> 
+		select * from (select rownum rn, board.* from (select * from medicinesboard <include refid="searchBoard" /> order by regdate desc) board) where rn between #{startRow} and #{endRow}	
+	</select>
+	
+    <select id="selectAllBoardLists" resultType="Board"> 
+		select * from (select * from medicinesboard) where rownum <![CDATA[ <= ]]>5 order by regdate desc
+	</select>
+	
+	<select id="selectBoardCount" resultType="int"> 
+		select count(*) from medicinesboard <include refid="searchBoard"/>
+	</select> 
+	
+	<delete id="deleteBoard"> 
+		delete from medicinesboard where num=#{num} 
+	</delete> 
+	
+	<sql id="searchBoard">
+		<choose>
+	    	<when test="search_option == 'all' ">
+	         	where  
+	         	id like '%'||#{keyword}||'%'   
+				or writer like '%' || #{keyword}||'%'
+				or title like '%' || #{keyword}||'%'
+				or content like '%'||#{keyword}||'%'   
+				or regdate like '%'||#{keyword}||'%'   
+			</when>
+	        <otherwise>
+				where ${search_option} like '%'||#{keyword}||'%'
+	        </otherwise>
+	    </choose>
+    </sql>
+    
+    <select id="selectAllBoardCommentList" parameterType="map" resultType="Comment"> 
+		select * from (select rownum rn, board.* from (select * from medicinescomment <include refid="searchBoardComment" /> order by regdate desc) board) where rn between #{startRow} and #{endRow}	
+	</select>
+	
+    <select id="selectAllBoardCommentLists" resultType="Comment"> 
+		select * from (select * from medicinescomment) where rownum <![CDATA[ <= ]]>5 order by regdate desc
+	</select>
+	
+	<select id="selectBoardCommentCount" resultType="int"> 
+		select count(*) from medicinescomment <include refid="searchBoardComment"/>
+	</select> 
+	
+	<delete id="deleteBoardComment"> 
+		delete from medicinescomment where no=#{no} 
+	</delete> 
+	
+	<sql id="searchBoardComment">
+		<choose>
+	    	<when test="search_option == 'all' ">
+	         	where  
+	         	id like '%'||#{keyword}||'%'   
+				or writer like '%' || #{keyword}||'%'
+				or content like '%'||#{keyword}||'%'   
+				or regdate like '%'||#{keyword}||'%'   
+			</when>
+	        <otherwise>
+				where ${search_option} like '%'||#{keyword}||'%'
+	        </otherwise>
+	    </choose>
+    </sql>
+    
+    <select id="selectQuestionUserList" parameterType="map" resultType="Question"> 
+		select * from (select rownum rn, board.* from (select * from medicinesquestion <include refid="searchQuestion" /> order by regdate desc) board) where rn between #{startRow} and #{endRow}	
+	</select>
+	
+    <select id="selectQuestionUserLists" resultType="Question"> 
+		select * from (select * from medicinesquestion) where rownum <![CDATA[ <= ]]>5 order by regdate desc
+	</select>
+	
+	<select id="selectQuestionCount" resultType="int"> 
+		select count(*) from medicinesquestion <include refid="searchQuestion"/>
+	</select> 
+	
+	<delete id="deleteQuestion"> 
+		delete from medicinesquestion where num=#{num} 
+	</delete> 
+	
+	<sql id="searchQuestion">
+		<choose>
+	    	<when test="search_option == 'all' ">
+	         	where  
+	         	id like '%'||#{keyword}||'%'   
+				or writer like '%' || #{keyword}||'%'
+				or title like '%' || #{keyword}||'%'
+				or content like '%'||#{keyword}||'%'   
+				or regdate like '%'||#{keyword}||'%'   
+			</when>
+	        <otherwise>
+				where ${search_option} like '%'||#{keyword}||'%'
+	        </otherwise>
+	    </choose>
+    </sql>
+    
+    <select id="selectAllQuestionCommentList" parameterType="map" resultType="QuestionComment"> 
+		select * from (select rownum rn, board.* from (select * from medicinesquestioncomment <include refid="searchQuestionComment" /> order by regdate desc) board) where rn between #{startRow} and #{endRow}	
+	</select>
+	
+    <select id="selectAllQuestionCommentLists" resultType="QuestionComment"> 
+		select * from (select * from medicinesquestioncomment) where rownum <![CDATA[ <= ]]>5 order by regdate desc
+	</select>
+	
+	<select id="selectQuestionCommentCount" resultType="int"> 
+		select count(*) from medicinesquestioncomment <include refid="searchQuestionComment"/>
+	</select> 
+	
+	<delete id="deleteQuestionComment"> 
+		delete from medicinesquestioncomment where no=#{no} 
+	</delete> 
+	
+	<sql id="searchQuestionComment">
+		<choose>
+	    	<when test="search_option == 'all' ">
+	         	where  
+	         	id like '%'||#{keyword}||'%'   
+				or writer like '%' || #{keyword}||'%'
+				or content like '%'||#{keyword}||'%'   
+				or regdate like '%'||#{keyword}||'%'   
+			</when>
+	        <otherwise>
+				where ${search_option} like '%'||#{keyword}||'%'
+	        </otherwise>
+	    </choose>
+    </sql>
+</mapper>
