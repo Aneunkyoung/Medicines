@@ -3,7 +3,7 @@
 
 > 주제: 공공데이터 포털 데이터를 추출해온 의약품 정보를 제공해주고 다양한 정보를 주고 받을 수 있는 사이트
 
-> 개발환경: Apache Tomcat 9.0, aws 배포, JDK 1.8, Eclipse, Mac OS, Sql Developer, HTML, JavaScript, Bootstrap, CSS
+> 개발환경: Apache Tomcat 9.0, aws, JDK 1.8, Eclipse, Mac OS, Sql Developer, HTML, JavaScript, Bootstrap, CSS
 
 
 <img src="https://camo.githubusercontent.com/5a3766cb85679609350d1f7d02015c8aabc8270f10db3557367f0cecd4016af8/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c616e67756167652d4a6176612d677265656e3f7374796c653d666c6174" data-canonical-src="https://img.shields.io/badge/Language-Java-green?style=flat" style="max-width: 100%;"><img src="https://img.shields.io/badge/DB-ORACLE-yellow" data-canonical-src="https://img.shields.io/badge/Platform-AWS-blue?style=flat" style="max-width: 100%;"><img src="https://camo.githubusercontent.com/7be8cf874ff520c83747483ddfa44ef93b0a1d4b2398fb885f73cbec9bbb901d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f506c6174666f726d2d4157532d626c75653f7374796c653d666c6174" data-canonical-src="https://img.shields.io/badge/Platform-AWS-blue?style=flat" style="max-width: 100%;">
