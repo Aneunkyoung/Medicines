@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<style type="text/css">
+	<style type="text/css">
 .comment-heading{
 	color: #333;
     background-color: #fff;
@@ -16,7 +16,7 @@
 	margin-top: 0;
     margin-bottom: 0;
     font-size: 14px;
-    color: inherit;
+    color: inherit; 
 }
 .comments{
 	margin-bottom: 20px;
