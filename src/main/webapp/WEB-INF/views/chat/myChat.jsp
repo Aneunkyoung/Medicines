@@ -12,6 +12,7 @@
     padding: 10px 15px;
     border-bottom: 1px solid #ddd;
 }
+
 .comment-heading-title{
 	margin-top: 0;
     margin-bottom: 0;
