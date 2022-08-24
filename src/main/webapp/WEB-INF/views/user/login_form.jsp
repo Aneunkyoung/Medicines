@@ -63,7 +63,7 @@ $("#loginBtn").click(function(){
 	loginForm.submit();
 });
 
-window.Kakao.init("");
+window.Kakao.init("642dc950a663921b4a82e63f4a5ca7b6");
 function kakaoLogin(){
 	window.Kakao.Auth.login({
 		scope:'profile_nickname,profile_image,account_email',
