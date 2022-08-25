@@ -9,7 +9,6 @@
 					관리자 페이지 입니다.
 				</div>
 			</div>
-
 		</div>
 		
 		<div class="alert alert-info" role="alert" style="text-align: center;">
